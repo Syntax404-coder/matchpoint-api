@@ -11,6 +11,7 @@ module Mutations
     argument :gender, String, required: true
     argument :gender_interest, String, required: true
     argument :country, String, required: true
+    argument :province, String, required: true
     argument :city, String, required: true
     argument :mobile, String, required: true
     argument :sexual_orientation, String, required: true

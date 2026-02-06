@@ -7,6 +7,8 @@ module Mutations
     argument :last_name, String, required: false
     argument :email, String, required: false
     argument :bio, String, required: false
+    argument :country, String, required: false
+    argument :province, String, required: false
     argument :city, String, required: false
     argument :role, String, required: false
     argument :mobile, String, required: false        
