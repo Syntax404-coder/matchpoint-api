@@ -34,7 +34,12 @@ module Types
     def primary_photo_url
       photo = object.primary_photo
       return unless photo&.image&.attached?
-      Rails.application.routes.url_helpers.url_for(photo.image)
+      
+      if Rails.application.config.active_storage.service == :cloudinary
+        Cloudinary::Utils.cloudinary_url(photo.image.key)
+      else
+        Rails.application.routes.url_helpers.url_for(photo.image)
+      end
     end
   end
 end

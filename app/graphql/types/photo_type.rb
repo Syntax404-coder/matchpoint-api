@@ -9,8 +9,14 @@ module Types
     def url
       return unless object.image.attached?
       
-      # Cloudinary URL (works automatically with Active Storage)
-      Rails.application.routes.url_helpers.url_for(object.image)
+      # For Cloudinary, get the direct URL from the blob's key
+      if Rails.application.config.active_storage.service == :cloudinary
+        # Cloudinary stores the public_id in the blob's key
+        Cloudinary::Utils.cloudinary_url(object.image.key)
+      else
+        # Fallback for local storage (development)
+        Rails.application.routes.url_helpers.url_for(object.image)
+      end
     end
   end
 end
