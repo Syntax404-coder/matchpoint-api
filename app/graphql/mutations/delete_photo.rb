@@ -2,28 +2,23 @@
 
 module Mutations
   class DeletePhoto < BaseMutation
-    argument :id, ID, required: true
+    argument :photo_id, ID, required: true
 
-    field :photo, Types::PhotoType, null: true
+    field :user, Types::UserType, null: true
     field :errors, [String], null: false
 
-    def resolve(id:)
+    def resolve(photo_id:)
       user = context[:current_user]
-      return { photo: nil, errors: ['Not authenticated'] } unless user
+      return { user: nil, errors: ['Not authenticated'] } unless user
 
-      photo = user.photos.find_by(id: id)
+      photo = user.photos.find_by(id: photo_id)
+      return { user: nil, errors: ['Photo not found'] } unless photo
 
-      if photo
-        if photo.destroy
-          { photo: photo, errors: [] }
-        else
-          { photo: nil, errors: photo.errors.full_messages }
-        end
+      if photo.destroy
+        { user: user.reload, errors: [] }
       else
-        { photo: nil, errors: ['Photo not found or does not belong to user'] }
+        { user: nil, errors: photo.errors.full_messages }
       end
-    rescue => e
-      { photo: nil, errors: [e.message] }
     end
   end
 end
