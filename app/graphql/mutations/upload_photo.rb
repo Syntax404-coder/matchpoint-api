@@ -2,7 +2,7 @@
 
 module Mutations
   class UploadPhoto < BaseMutation
-    argument :image, String, required: true  # Base64 encoded image
+    argument :image, Types::FileType, required: true
     argument :position, Integer, required: false
     argument :is_primary, Boolean, required: false
 
@@ -24,17 +24,9 @@ module Mutations
         is_primary: is_primary || user.photos.empty?
       )
 
-      # Decode base64 and attach to Cloudinary
+      # Attach file directly (handled by scalar)
       begin
-        # Remove data:image/jpeg;base64, prefix if present
-        image_data = image.split(',').last
-        decoded = Base64.decode64(image_data)
-        
-        photo.image.attach(
-          io: StringIO.new(decoded),
-          filename: "photo_#{Time.now.to_i}.jpg",
-          content_type: 'image/jpeg'
-        )
+        photo.image.attach(image)
 
         if photo.save
           { photo: photo, errors: [] }
