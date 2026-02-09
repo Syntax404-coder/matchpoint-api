@@ -14,6 +14,7 @@ module Types
     field :create_swipe, mutation: Mutations::CreateSwipe
     field :swipe_user, mutation: Mutations::SwipeUser
     field :upload_photo, mutation: Mutations::UploadPhoto
+    field :delete_photo, mutation: Mutations::DeletePhoto
 
     # Mutations for user authentication
     field :login_user, mutation: Mutations::LoginUser
