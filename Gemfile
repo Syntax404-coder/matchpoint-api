@@ -32,6 +32,7 @@ gem "image_processing", "~> 1.2"
 # GraphQL for Rails
 gem 'graphql'
 gem 'graphql-batch'
+gem 'apollo_upload_server'
 
 # Use JWT for token-based authentication 
 gem 'jwt'
