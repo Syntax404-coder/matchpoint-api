@@ -54,8 +54,8 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set production host
-  config.action_mailer.default_url_options = { host: "api.example.com", protocol: 'https' }
-  Rails.application.routes.default_url_options = { host: 'api.example.com', protocol: 'https' }
+  config.action_mailer.default_url_options = { host: ENV.fetch("HOST"), protocol: 'https' }
+  Rails.application.routes.default_url_options = { host: ENV.fetch("HOST"), protocol: 'https' }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
