@@ -1,0 +1,609 @@
+{
+	"info": {
+		"_postman_id": "matchpoint-api-collection",
+		"name": "MatchPoint API",
+		"description": "GraphQL Collection for MatchPoint API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation RegisterUser($input: RegisterUserInput!) {\n  registerUser(input: $input) {\n    user {\n      id\n      email\n      firstName\n      lastName\n    }\n    token\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"birthdate\": \"1990-01-01\",\n    \"gender\": \"Male\",\n    \"genderInterest\": \"Female\",\n    \"country\": \"Philippines\",\n    \"province\": \"Metro Manila\",\n    \"city\": \"Makati\",\n    \"mobile\": \"09123456789\",\n    \"sexualOrientation\": \"Straight\",\n    \"bio\": \"Hello world!\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.json().data.loginUser.token) {",
+									"    pm.environment.set(\"token\", pm.response.json().data.loginUser.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation LoginUser($input: LoginUserInput!) {\n  loginUser(input: $input) {\n    user {\n      id\n      email\n      firstName\n      lastName\n    }\n    token\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "User Profile",
+			"item": [
+				{
+					"name": "Current User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  currentUser {\n    id\n    email\n    firstName\n    lastName\n    gender\n    genderInterest\n    bio\n    photos {\n      id\n      url\n      position\n      isPrimary\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateProfile($input: UpdateProfileInput!) {\n  updateProfile(input: $input) {\n    user {\n      id\n      firstName\n      lastName\n      bio\n    }\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"bio\": \"Updated bio\",\n    \"firstName\": \"Johnny\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Upload Photo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "operations",
+									"value": "{ \"query\": \"mutation($image: Upload!) { uploadPhoto(input: { image: $image }) { photo { id url } errors } }\", \"variables\": { \"image\": null } }",
+									"type": "text"
+								},
+								{
+									"key": "map",
+									"value": "{ \"0\": [\"variables.image\"] }",
+									"type": "text"
+								},
+								{
+									"key": "0",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Photo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeletePhoto($input: DeletePhotoInput!) {\n  deletePhoto(input: $input) {\n    user {\n      id\n      photos {\n        id\n        url\n      }\n    }\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"photoId\": \"1\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Swiping",
+			"item": [
+				{
+					"name": "Swipe Deck",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query SwipeDeck($limit: Int) {\n  swipeDeck(limit: $limit) {\n    id\n    firstName\n    lastName\n    age\n    gender\n    bio\n    photos {\n      url\n    }\n  }\n}",
+								"variables": "{\n  \"limit\": 10\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Potential Matches",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query PotentialMatches($limit: Int) {\n  potentialMatches(limit: $limit) {\n    id\n    firstName\n    lastName\n    age\n    gender\n    bio\n    photos {\n      url\n    }\n  }\n}",
+								"variables": "{\n  \"limit\": 10\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Swipe (Like/Dislike)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateSwipe($input: CreateSwipeInput!) {\n  createSwipe(input: $input) {\n    swipe {\n      id\n      action\n    }\n    matched\n    match {\n      id\n    }\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"swipedId\": \"2\",\n    \"action\": \"like\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Swipe User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation SwipeUser($input: SwipeUserInput!) {\n  swipeUser(input: $input) {\n    isMatch\n    matchId\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"targetId\": \"2\",\n    \"direction\": \"like\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "My Matches",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  myMatches {\n    id\n    user1 {\n      id\n      firstName\n    }\n    user2 {\n      id\n      firstName\n    }\n    createdAt\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Messaging",
+			"item": [
+				{
+					"name": "My Inbox",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  myInbox {\n    match {\n      id\n    }\n    otherUser {\n      id\n      firstName\n      lastName\n      photos {\n        url\n      }\n    }\n    latestMessage {\n      id\n      content\n      createdAt\n    }\n    unreadCount\n    updatedAt\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Conversation Messages",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ConversationMessages($matchId: ID!) {\n  conversationMessages(matchId: $matchId) {\n    id\n    content\n    sender {\n      id\n      firstName\n    }\n    read\n    createdAt\n  }\n}",
+								"variables": "{\n  \"matchId\": \"1\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Send Message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation SendMessage($input: SendMessageInput!) {\n  sendMessage(input: $input) {\n    message {\n      id\n      content\n      createdAt\n    }\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"matchId\": \"1\",\n    \"receiverId\": \"2\",\n    \"content\": \"Hello there!\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Mark As Read",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation MarkAsRead($input: MarkAsReadInput!) {\n  markAsRead(input: $input) {\n    message {\n      id\n      read\n    }\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"messageId\": \"1\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "All Users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query AllUsers($limit: Int, $offset: Int) {\n  allUsers(limit: $limit, offset: $offset) {\n    id\n    email\n    firstName\n    lastName\n    role\n    createdAt\n  }\n}",
+								"variables": "{\n  \"limit\": 50,\n  \"offset\": 0\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "User Details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query UserDetails($userId: ID!) {\n  userDetails(userId: $userId) {\n    id\n    email\n    firstName\n    lastName\n    role\n    bio\n    gender\n    location\n    photos {\n      url\n    }\n  }\n}",
+								"variables": "{\n  \"userId\": \"1\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "User Matches",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query UserMatches($userId: ID!) {\n  userMatches(userId: $userId) {\n    id\n    user1 {\n      firstName\n    }\n    user2 {\n      firstName\n    }\n    createdAt\n  }\n}",
+								"variables": "{\n  \"userId\": \"1\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "All Matches",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query AllMatches($limit: Int) {\n  allMatches(limit: $limit) {\n    id\n    user1 {\n      firstName\n    }\n    user2 {\n      firstName\n    }\n    createdAt\n  }\n}",
+								"variables": "{\n  \"limit\": 50\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Dashboard Stats",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query DashboardStats($popularLimit: Int) {\n  dashboardStats(popularLimit: $popularLimit) {\n    totalUsers\n    totalMatches\n    totalSwipes\n    totalMessages\n    popularUsers {\n      user {\n        firstName\n        lastName\n      }\n      likesReceived\n      matchesCount\n    }\n  }\n}",
+								"variables": "{\n  \"popularLimit\": 10\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update User (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateUser($input: UpdateUserInput!) {\n  updateUser(input: $input) {\n    user {\n      id\n      firstName\n      email\n    }\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"userId\": \"2\",\n    \"firstName\": \"New Name\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete User (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeleteUser($input: DeleteUserInput!) {\n  deleteUser(input: $input) {\n    success\n    errors\n  }\n}",
+								"variables": "{\n  \"input\": {\n    \"userId\": \"2\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
