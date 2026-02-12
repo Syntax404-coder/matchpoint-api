@@ -21,7 +21,7 @@ psql --version
 
 ## detailed setup
 
-1.  **Open your terminal** and navigate to the project directory:
+1.  **Open your terminal** and navigate to the project directories:
     ```sh
     cd matchpoint-api-1
     ```
