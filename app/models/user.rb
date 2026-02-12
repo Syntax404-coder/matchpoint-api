@@ -16,8 +16,12 @@ class User < ApplicationRecord
   validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :role, inclusion: { in: ROLES }
   
-  # custom validation to ensure user is at least 18 years old
-  validate :must_be_18_or_older
+  # custom validation to ensure male user is at least 18 years old
+  validate :must_be_18_or_older_for_male
+
+  # custom validation to ensure female user has at least 21 years old
+  validate :must_be_21_or_older_for_female
+
   
   # before creating a user, set default role to 'user' if not provided
   before_validation :set_default_role
@@ -51,9 +55,14 @@ class User < ApplicationRecord
   private
 
   # PHOTO SCOPES
-  # Validates that the user is at least 18 years old
-  def must_be_18_or_older
-    errors.add(:birthdate, 'must be 18 or older') if age && age < 18
+  # Validates that the Male user is at least 18 years old
+  def must_be_18_or_older_for_male
+    errors.add(:birthdate, 'must be 18 or older') if age && age < 18 && gender == 'male'
+  end
+
+  # Validates that the Female user is at least 21 years old
+  def must_be_21_or_older_for_female
+    errors.add(:birthdate, 'must be 21 or older') if age && age < 21 && gender == 'female'
   end
 
   # user creates with role 'user' by default
